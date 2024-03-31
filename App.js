@@ -3,40 +3,45 @@ import './App.css';
 
 class Button extends React.Component {
   render() {
-    const handler = () => {
-      this.props.onClickAct(this.props.bkColor);
-      this.props.onClickAct2(this.props.color);
+    const handler = () => 
+    {
+      fetch('https://api.quotable.io/quotes/random')
+      .then(response => response.json())
+      .then(data => 
+      {
+        this.props.onClickAct("Quote: "+data[0].content + " Author: " + data[0].author);
+      })
+      .catch(error => console.error('Error:', error));
+     
+      
     };
     return (
-      <button onClick={handler} style={{ backgroundColor: this.props.bkColor, color: this.props.color }}>
-        {this.props.text}
+      <button onClick={handler}>
+       Click me
       </button>
     );
   }
 }
 
-class MyDiv extends React.Component {
+class MyDiv extends React.Component 
+{
   render() {
     return (
-      <div style={{ backgroundColor: this.props.bkColor,color:this.props.color}}>Some text</div>
+      <div>{this.props.message}</div>
     );
   }
 }
-
 function App() {
-  const [displayBkColor, setDisplayBkColor] = React.useState("white");
-  const [displayColor, setDisplayColor] = React.useState("black");
+  const [displayMes, setDisplayMes] = React.useState("");
 
-  const stateFunc = (newBkColor) => { setDisplayBkColor(newBkColor); };
-  const stateFunc2 = (newColor) => { setDisplayColor(newColor); };
+  const stateFunc = (newBkColor) => { setDisplayMes(newBkColor); };
+ 
 
   return (
-    <>
-      <Button bkColor="red" color="green" text="Red" onClickAct={stateFunc} onClickAct2={stateFunc2} />
-      <Button bkColor="green" color="red" text="Green" onClickAct={stateFunc} onClickAct2={stateFunc2} />
-      <Button bkColor="yellow" color="blue" text="Yellow" onClickAct={stateFunc} onClickAct2={stateFunc2} />
-      <MyDiv bkColor={displayBkColor} color={displayColor}/>
-    </>
+    <div className="App">
+      <Button onClickAct={stateFunc}  />
+      <MyDiv message={displayMes} />
+    </div>
   );
 }
 
